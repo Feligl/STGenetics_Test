@@ -1,3 +1,7 @@
+using STGeneticsTest.Contracts;
+using STGeneticsTest.Database;
+using STGeneticsTest.Repository;
+
 namespace STGeneticsTest
 {
     public class Program
@@ -7,7 +11,8 @@ namespace STGeneticsTest
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
+            builder.Services.AddSingleton<DapperContext>();
+            builder.Services.AddScoped<IAnimalRepository, AnimalRepository>();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
