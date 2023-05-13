@@ -8,20 +8,50 @@ namespace STGeneticsTest.Controllers
 {
     [ApiController]
     [Route("[controller]/[action]")]
-    public class AnimalController : ControllerBase
+    public class PurchaseController : ControllerBase
     {
         #region Constructor and Properties
-        private readonly IAnimalRepository _animalRepo;
-        private readonly ILogger<AnimalController> _logger;
+        private readonly IPurchaseRepository _purchaseRepository;
+        private readonly IAnimalRepository _animalRepository;
+        private readonly ILogger<PurchaseController> _logger;
 
-        public AnimalController(ILogger<AnimalController> logger, IAnimalRepository animalRepository)
+        public PurchaseController(ILogger<PurchaseController> logger, IAnimalRepository animalRepository, IPurchaseRepository purchaseRepository)
         {
             _logger = logger;
-            _animalRepo = animalRepository;
+            _purchaseRepository = purchaseRepository;
+            _animalRepository = animalRepository;
         }
         #endregion
 
         #region Public Methods & Endpoints
+        [HttpPost]
+        public async Task<IActionResult> AnimalPurchase(PurchaseDto purchases)
+        {
+            try
+            {
+                foreach (var purchase in purchases.AnimalPurchases)
+                {
+                    var animal = await _animalRepository.GetAnimalById(purchase.AnimalId);
+                    if (animal == null) return NotFound($"Animal #{purchase.AnimalId} does not exist");
+                }
+
+                foreach (var purchase in purchases.AnimalPurchases)
+                {
+                    new PurchaseDetailDto
+
+                    var animal = await _animalRepository.GetAnimalById(purchase.AnimalId);
+                    if (animal == null) return NotFound($"Animal #{purchase.AnimalId} does not exist");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
+
         [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)

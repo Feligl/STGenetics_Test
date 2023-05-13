@@ -5,6 +5,7 @@ namespace STGeneticsTest.Models
 {
     public static class AnimalData
     {
+        // ↓ Some options to randomize that with Bogus
         public static string[] AnimalBreed = new[] { "Angus", "Hereford", "Charolais", "Simmental", "Red Angus", "Limousin", "Gelbvieh", "Brangus", "Beefmaster", "Salers" };
         public static string[] AnimalSex = new[] { "F", "M" };
     }
@@ -42,6 +43,15 @@ namespace STGeneticsTest.Models
                 Status = (bool)this.Status,
             };
         }
+    }
+
+    public class AnimalFilterDto
+    {
+        public int? AnimalId { get; set; }
+        public string Name { get; set; }
+        public string Sex { get; set; }
+        public bool? Status { get; set; }
+
     }
 
 

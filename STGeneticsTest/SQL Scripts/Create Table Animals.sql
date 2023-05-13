@@ -1,4 +1,6 @@
 USE STGenetics
+GO
+
 CREATE TABLE Animals
 	(
 	AnimalId int NOT NULL IDENTITY (1, 1) PRIMARY KEY,
