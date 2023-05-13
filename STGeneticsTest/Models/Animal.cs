@@ -1,6 +1,14 @@
 ﻿
+using Dapper;
+
 namespace STGeneticsTest.Models
 {
+    public static class AnimalData
+    {
+        public static string[] AnimalBreed = new[] { "Angus", "Hereford", "Charolais", "Simmental", "Red Angus", "Limousin", "Gelbvieh", "Brangus", "Beefmaster", "Salers" };
+        public static string[] AnimalSex = new[] { "F", "M" };
+    }
+
     public class Animal
     {
         public int AnimalId { get; set; }
@@ -11,4 +19,30 @@ namespace STGeneticsTest.Models
         public int Price { get; set; }
         public bool Status { get; set; }
     }
+
+    public class AnimalDto
+    {
+        public string Name { get; set; }
+        public string Breed { get; set; }
+        public DateTime? BirthDate { get; set; }
+        public string Sex { get; set; }
+        public int? Price { get; set; }
+        public bool? Status { get; set; }
+
+        public Animal ToAnimal(int id)
+        {
+            return new Animal
+            {
+                AnimalId = id,
+                Name = this.Name,
+                Breed = this.Breed,
+                BirthDate = (DateTime)this.BirthDate,
+                Sex = this.Sex,
+                Price = (int)this.Price,
+                Status = (bool)this.Status,
+            };
+        }
+    }
+
+
 }

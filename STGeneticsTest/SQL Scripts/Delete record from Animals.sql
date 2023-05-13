@@ -1,0 +1,9 @@
+USE STGenetics
+GO
+
+CREATE PROCEDURE upsDeleteAnimal(@id int) AS
+BEGIN
+	SET NOCOUNT OFF
+	DELETE FROM Animals WHERE AnimalId = @id
+	SELECT @@ROWCOUNT
+END 
