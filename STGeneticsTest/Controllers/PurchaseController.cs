@@ -24,8 +24,8 @@ namespace STGeneticsTest.Controllers
         private readonly int BaseFreightValue = 1000;
 
         public PurchaseController(
-            ILogger<PurchaseController> logger, 
-            IAnimalRepository animalRepository, 
+            ILogger<PurchaseController> logger,
+            IAnimalRepository animalRepository,
             IPurchaseRepository purchaseRepository,
             IPurchaseDetailRepository purchaseDetailRepository)
         {
@@ -52,11 +52,12 @@ namespace STGeneticsTest.Controllers
                 var purchaseDetailListWithPrices = new List<PurchaseDetailWithPriceDto>();
                 foreach (var item in listWithDetails)
                 {
+                    double itemPrice = (double)item.Price;
                     purchaseDetailListWithPrices.Add(new PurchaseDetailWithPriceDto
                     {
                         AnimalId = item.Id,
                         QuantitySold = item.Quantity,
-                        UnitPrice = item.Quantity > AnimalDiscountThreshold ? item.Price * AnimalDiscountRate : item.Price
+                        UnitPrice = item.Quantity > AnimalDiscountThreshold ? itemPrice * AnimalDiscountRate : itemPrice
                     });
                 }
 
@@ -94,7 +95,7 @@ namespace STGeneticsTest.Controllers
                         QuantitySold = item.QuantitySold
                     };
                     await _purchaseDetailRepository.InsertPurchaseDetail(purchaseDetail);
-                }                
+                }
 
                 return Ok(purchaseDb);
             }

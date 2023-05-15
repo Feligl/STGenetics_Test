@@ -104,7 +104,9 @@ namespace STGeneticsTest.Repository
             using (var connection = _context.CreateConnection())
             {
                 var animals = await connection.QueryAsync<AnimalPurchaseDto>(query);
-                return animals.ToList();
+                var dbList = animals.ToList();
+                var result = dbList.Where(l => l.Price != null).ToList();
+                return result;
             }
         }
         #endregion
