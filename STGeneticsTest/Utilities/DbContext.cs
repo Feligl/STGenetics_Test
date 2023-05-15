@@ -1,13 +1,13 @@
 ﻿using Microsoft.Data.SqlClient;
 using System.Data;
 
-namespace STGeneticsTest.Database
+namespace STGeneticsTest.Utilities
 {
-    public class DapperContext
+    public class DbContext
     {
         private readonly IConfiguration _configuration;
         private readonly string _connectionString;
-        public DapperContext(IConfiguration configuration)
+        public DbContext(IConfiguration configuration)
         {
             _configuration = configuration;
             _connectionString = _configuration.GetConnectionString("SqlConnection");

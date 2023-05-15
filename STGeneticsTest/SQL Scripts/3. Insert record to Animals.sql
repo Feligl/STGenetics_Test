@@ -6,13 +6,12 @@ CREATE PROCEDURE upsInsertAnimal(
 @breed varchar(MAX),
 @birthdate date,
 @sex varchar(1),
-@price int,
+@price float,
 @status bit
 )
 AS
 BEGIN
 	DECLARE @result table(id int)
-	SELECT * INTO #result FROM Animals
 	INSERT INTO Animals(Name,Breed,BirthDate,Sex,Price,Status) 
 	OUTPUT INSERTED.AnimalId into @result
 	VALUES(@name,@breed,@birthdate,@sex,@price,@status)

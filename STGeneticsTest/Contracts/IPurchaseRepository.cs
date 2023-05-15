@@ -4,6 +4,6 @@ namespace STGeneticsTest.Contracts
 {
     public interface IPurchaseRepository
     {
-        public Task<Purchase> InsertPurchase(AnimalDto animal);
+        public Task<Purchase> InsertPurchase(PurchaseInfoDto purchase);
     }
 }

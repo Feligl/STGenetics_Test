@@ -7,20 +7,20 @@ namespace STGeneticsTest.Models
     {
         public int AnimalId { get; set; }
         public int PurchaseId { get; set; }
-        public int UnitPrice { get; set; }
-        public int QuantitySold { get; set; }
-    }
-
-    public class PurchaseDetailArgDto
-    {
-        public int AnimalId { get; set; }
+        public double UnitPrice { get; set; }
         public int QuantitySold { get; set; }
     }
 
     public class PurchaseDetailDto
     {
         public int AnimalId { get; set; }
-        public int UnitPrice { get; set; }
+        public int QuantitySold { get; set; }
+    }    
+    
+    public class PurchaseDetailWithPriceDto
+    {
+        public int AnimalId { get; set; }
+        public double UnitPrice { get; set; }
         public int QuantitySold { get; set; }
     }
 }

@@ -2,8 +2,8 @@
 
 namespace STGeneticsTest.Contracts
 {
-    public interface IRelationaRepository
+    public interface IPurchaseDetailRepository
     {
-        public Task<PurchaseDetail> InsertRelation(AnimalDto animal);
+        public Task<int> InsertPurchaseDetail(PurchaseDetail purchaseDetail);
     }
 }

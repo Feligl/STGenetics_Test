@@ -17,7 +17,7 @@ namespace STGeneticsTest.Models
         public string Breed { get; set; }
         public DateTime BirthDate { get; set; }
         public string Sex { get; set; }
-        public int Price { get; set; }
+        public double Price { get; set; }
         public bool Status { get; set; }
     }
 
@@ -27,7 +27,7 @@ namespace STGeneticsTest.Models
         public string Breed { get; set; }
         public DateTime? BirthDate { get; set; }
         public string Sex { get; set; }
-        public int? Price { get; set; }
+        public double? Price { get; set; }
         public bool? Status { get; set; }
 
         public Animal ToAnimal(int id)
@@ -39,7 +39,7 @@ namespace STGeneticsTest.Models
                 Breed = this.Breed,
                 BirthDate = (DateTime)this.BirthDate,
                 Sex = this.Sex,
-                Price = (int)this.Price,
+                Price = (double)this.Price,
                 Status = (bool)this.Status,
             };
         }
@@ -51,8 +51,14 @@ namespace STGeneticsTest.Models
         public string Name { get; set; }
         public string Sex { get; set; }
         public bool? Status { get; set; }
-
     }
 
+    public class AnimalPurchaseDto
+    {
+        public int Id { get; set; }
+        public double Price { get; set; }
+        public int Quantity { get; set; }
+        public bool Status { get; set; }
+    }
 
 }

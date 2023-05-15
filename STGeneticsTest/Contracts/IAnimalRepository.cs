@@ -9,6 +9,7 @@ namespace STGeneticsTest.Contracts
         public Task<Animal> InsertAnimal(AnimalDto animal);
         public Task<Animal> UpdateAnimal(int id, AnimalDto animal);
         public Task<int> DeleteAnimal(int id);
-        public Task<IEnumerable<Animal>> GetFilteredAnimals(AnimalFilterDto filter);
+        public Task<IEnumerable<Animal>> GetAnimalsByFilter(AnimalFilterDto filter);
+        public Task<IEnumerable<AnimalPurchaseDto>> GetAnimalsByIdList(List<PurchaseDetailDto> list);
     }
 }

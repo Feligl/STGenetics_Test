@@ -4,15 +4,15 @@ GO
 CREATE TABLE Purchases
 	(
 	PurchaseId int NOT NULL IDENTITY (1, 1) PRIMARY KEY,
-	TotalOrderPrice int NOT NULL,
+	TotalOrderPrice float NOT NULL,
 	Freight int NOT NULL,
 	)
 
-CREATE TABLE PurchaseDetail
+CREATE TABLE PurchaseDetails
 	(
 	AnimalId int NOT NULL,
 	PurchaseId int NOT NULL,
-	UnitPrice int NOT NULL,
+	UnitPrice float NOT NULL,
 	QuantitySold int NOT NULL,
 	CONSTRAINT PK_Animal_Purchase PRIMARY KEY (AnimalId, PurchaseId),
 	CONSTRAINT FK_Animal_Id FOREIGN KEY (AnimalId) REFERENCES Animals(AnimalId),

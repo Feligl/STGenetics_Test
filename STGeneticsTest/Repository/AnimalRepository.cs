@@ -1,6 +1,6 @@
 ﻿using Dapper;
 using STGeneticsTest.Contracts;
-using STGeneticsTest.Database;
+using STGeneticsTest.Utilities;
 using STGeneticsTest.Models;
 using System.Data;
 using System.Text;
@@ -9,12 +9,15 @@ namespace STGeneticsTest.Repository
 {
     public class AnimalRepository : IAnimalRepository
     {
-        private readonly DapperContext _context;
-        public AnimalRepository(DapperContext context)
+        #region Constructor and Properties
+        private readonly DbContext _context;
+        public AnimalRepository(DbContext context)
         {
             _context = context;
         }
+        #endregion
 
+        #region Public Methods
         public async Task<IEnumerable<Animal>> GetAllAnimals()
         {
             var query = "SELECT * FROM Animals";
@@ -38,22 +41,10 @@ namespace STGeneticsTest.Repository
             }
         }
 
-        private DynamicParameters addParametersToUsp(AnimalDto animal)
-        {
-            var storedProcedureArgs = new DynamicParameters();
-            storedProcedureArgs.Add("name", animal.Name, DbType.String);
-            storedProcedureArgs.Add("breed", animal.Breed, DbType.String);
-            storedProcedureArgs.Add("birthdate", animal.BirthDate, DbType.Date);
-            storedProcedureArgs.Add("sex", animal.Sex, DbType.String);
-            storedProcedureArgs.Add("price", animal.Price, DbType.Int32);
-            storedProcedureArgs.Add("status", animal.Status, DbType.Boolean);
-            return storedProcedureArgs;
-        }
-
         public async Task<Animal> InsertAnimal(AnimalDto animal)
         {
             var storedProcedureName = "upsInsertAnimal";
-            var storedProcedureArgs = addParametersToUsp(animal);
+            var storedProcedureArgs = AddParametersToUsp(animal);
 
             using (var connection = _context.CreateConnection())
             {
@@ -65,7 +56,7 @@ namespace STGeneticsTest.Repository
         public async Task<Animal> UpdateAnimal(int id, AnimalDto animal)
         {
             var storedProcedureName = "upsUpdateAnimal";
-            var storedProcedureArgs = addParametersToUsp(animal);
+            var storedProcedureArgs = AddParametersToUsp(animal);
             storedProcedureArgs.Add("id", id, DbType.Int32);
 
             using (var connection = _context.CreateConnection())
@@ -88,7 +79,7 @@ namespace STGeneticsTest.Repository
             }
         }
 
-        public async Task<IEnumerable<Animal>> GetFilteredAnimals(AnimalFilterDto filter)
+        public async Task<IEnumerable<Animal>> GetAnimalsByFilter(AnimalFilterDto filter)
         {
             var query = "SELECT * FROM Animals WHERE " + GenerateDynamicFilter(filter);
             var storedProcedureArgs = new DynamicParameters();
@@ -104,17 +95,54 @@ namespace STGeneticsTest.Repository
             }
         }
 
-        // ↓ The same could have been done using sp_executesql, but it seems Execution Plan is not optimized for that one either...
+        public async Task<IEnumerable<AnimalPurchaseDto>> GetAnimalsByIdList(List<PurchaseDetailDto> list)
+        {
+            var query = $"SELECT T1.Id, T2.Price, T1.Quantity, T2.Status " +
+                        $"FROM (VALUES {GenerateValues(list)}) AS t1(Id, Quantity) " +
+                        $"LEFT JOIN Animals T2 ON t1.Id = t2.AnimalId";
+
+            using (var connection = _context.CreateConnection())
+            {
+                var animals = await connection.QueryAsync<AnimalPurchaseDto>(query);
+                return animals.ToList();
+            }
+        }
+        #endregion
+
+        #region Private Methods
+        private DynamicParameters AddParametersToUsp(AnimalDto animal)
+        {
+            var storedProcedureArgs = new DynamicParameters();
+            storedProcedureArgs.Add("name", animal.Name, DbType.String);
+            storedProcedureArgs.Add("breed", animal.Breed, DbType.String);
+            storedProcedureArgs.Add("birthdate", animal.BirthDate, DbType.Date);
+            storedProcedureArgs.Add("sex", animal.Sex, DbType.String);
+            storedProcedureArgs.Add("price", animal.Price, DbType.Int32);
+            storedProcedureArgs.Add("status", animal.Status, DbType.Boolean);
+            return storedProcedureArgs;
+        }
+
+        // ↓ The same could have been done using sp_executesql, but Execution Plan is not optimized for that one either...
         private string GenerateDynamicFilter(AnimalFilterDto filter)
         {
-            var sb = new StringBuilder();
-            if (filter.AnimalId != null) sb.Append("AnimalId = @id OR ");
-            if (filter.Name != null) sb.Append("Name LIKE @name OR ");
-            if (filter.Sex != null) sb.Append("Sex = @sex OR ");
-            if (filter.Status != null) sb.Append("Status = @status OR ");
-            sb.Length -= 3;
-            return sb.ToString();
+            var result = new StringBuilder();
+            if (filter.AnimalId != null) result.Append("AnimalId = @id OR ");
+            if (filter.Name != null) result.Append("Name LIKE @name OR ");
+            if (filter.Sex != null) result.Append("Sex = @sex OR ");
+            if (filter.Status != null) result.Append("Status = @status OR ");
+            result.Length -= 3;
+            return result.ToString();
         }
+
+
+        private string GenerateValues(List<PurchaseDetailDto> list)
+        {
+            var result = new StringBuilder();
+            foreach (var detail in list) result.Append($"({detail.AnimalId},{detail.QuantitySold}), ");
+            result.Length -= 2;
+            return result.ToString();
+        }
+        #endregion
     }
 }
 

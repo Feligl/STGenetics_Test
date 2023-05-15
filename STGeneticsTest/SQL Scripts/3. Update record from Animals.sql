@@ -7,7 +7,7 @@ CREATE PROCEDURE upsUpdateAnimal(
 @breed varchar(MAX) = NULL,
 @birthdate date = NULL,
 @sex varchar(1) = NULL,
-@price int = NULL,
+@price float = NULL,
 @status bit = NULL
 )
 AS

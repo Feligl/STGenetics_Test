@@ -1,23 +1,25 @@
 using Bogus;
 using Humanizer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using STGeneticsTest.Contracts;
 using STGeneticsTest.Models;
 
 namespace STGeneticsTest.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]/[action]")]
     public class AnimalController : ControllerBase
     {
         #region Constructor and Properties
-        private readonly IAnimalRepository _animalRepo;
+        private readonly IAnimalRepository _animalRepository;
         private readonly ILogger<AnimalController> _logger;
 
         public AnimalController(ILogger<AnimalController> logger, IAnimalRepository animalRepository)
         {
             _logger = logger;
-            _animalRepo = animalRepository;
+            _animalRepository = animalRepository;
         }
         #endregion
 
@@ -28,7 +30,7 @@ namespace STGeneticsTest.Controllers
         {
             try
             {
-                var animal = await _animalRepo.GetAnimalById(id);
+                var animal = await _animalRepository.GetAnimalById(id);
                 if (animal == null)
                     return NotFound();
                 else
@@ -46,7 +48,7 @@ namespace STGeneticsTest.Controllers
         {
             try
             {
-                return Ok(await _animalRepo.GetFilteredAnimals(filter));
+                return Ok(await _animalRepository.GetAnimalsByFilter(filter));
             }
             catch (Exception ex)
             {
@@ -60,7 +62,7 @@ namespace STGeneticsTest.Controllers
         {
             try
             {
-                return Ok(await _animalRepo.GetAllAnimals());
+                return Ok(await _animalRepository.GetAllAnimals());
             }
             catch (Exception ex)
             {
@@ -76,7 +78,7 @@ namespace STGeneticsTest.Controllers
             if (checkAnimal != null) return checkAnimal;
             try
             {
-                return Ok(await _animalRepo.InsertAnimal(animal));
+                return Ok(await _animalRepository.InsertAnimal(animal));
             }
             catch (Exception ex)
             {
@@ -93,7 +95,7 @@ namespace STGeneticsTest.Controllers
             if (checkSex != null) return checkSex;
             try
             {
-                return Ok(await _animalRepo.UpdateAnimal(id, animal));
+                return Ok(await _animalRepository.UpdateAnimal(id, animal));
             }
             catch (Exception ex)
             {
@@ -108,7 +110,7 @@ namespace STGeneticsTest.Controllers
         {
             try
             {
-                return Ok("Number of Deleted Records: " + await _animalRepo.DeleteAnimal(id));
+                return Ok("Number of Deleted Records: " + await _animalRepository.DeleteAnimal(id));
             }
             catch (Exception ex)
             {
@@ -166,7 +168,7 @@ namespace STGeneticsTest.Controllers
                 var testAnimals = generatorObject.GenerateBetween(quantity, quantity);
 
                 foreach (var animal in testAnimals)
-                    await _animalRepo.InsertAnimal(animal);
+                    await _animalRepository.InsertAnimal(animal);
             }
             catch (Exception ex)
             {
